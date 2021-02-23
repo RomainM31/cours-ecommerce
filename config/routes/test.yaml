@@ -1,0 +1,11 @@
+#test:
+#  path: /test/{age<\d+>?28}/{prenom<\w+>?Romain}
+#  controller: App\Controller\TestController::test
+#  methods: [POST, GET]
+#  host: localhost
+#  schemes: [https, http]
+##    defaults:
+##        age: 28
+##        prenom: Romain
+##    requirements:
+##        age: \d+
