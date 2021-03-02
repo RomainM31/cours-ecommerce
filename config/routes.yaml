@@ -1,6 +1,6 @@
-index:
-    path: /
-    controller: App\Controller\TestController::index
+#index:
+#    path: /
+#    controller: App\Controller\TestController::index
 
 # Nous avons inclus ici les valeurs par défaut et les valeurs requises directement dans le path de la route. Tel que :
 # Si aucun age ni prénom n'est renseigné dans l'url "localhost:888/test/" alors les valeurs par défaut seront 28 et Romain

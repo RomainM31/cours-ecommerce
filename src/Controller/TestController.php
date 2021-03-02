@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Taxes\Calculator;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,9 +10,23 @@ use Symfony\Component\Routing\Annotation\Route;
 // TOUT nos controllers, TOUTES nos fonctions doivent TOUJOURS retourner une réponse
 class TestController
 {
+
+    protected $calculator;
+
+    public function __construct(Calculator $calculator)
+    {
+        $this->calculator = $calculator;
+    }
+
+
+    /**
+     * @Route("/", name="index")
+     */
     public function index(): Response
     {
 
+        $tva = $this->calculator->calcul(100);
+        dump($tva);
         dd("Ca fonctionne");
     }
 
@@ -26,9 +41,11 @@ class TestController
      */
     public function test(Request $request, $age, $prenom): Response
     {
+        dump($request);
 //        $age = $request->attributes->get('age', 29);
 //        $prenom = $request->attributes->get('prenom', 'Le Bib');
 
         return new Response("Vous êtes $prenom, et vous avez $age ans");
     }
+
 }
