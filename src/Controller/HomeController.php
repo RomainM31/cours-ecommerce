@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -12,23 +12,15 @@ class HomeController extends AbstractController
 	 * @Route("/", name="homepage")
 	 * @param ProductRepository $productRepository
 	 *
+	 * @return Response
 	 */
 	public function homepage(ProductRepository $productRepository)
 	{
-		// count([])
-		// find(id)
-		// findBy([critère de recherche], [critère de tri], limite (int)) (Renvoie un tableau)
-		// findOneBy([critère de recherche])
-		// findAll() Renvoie TOUS les produits
+		$products = $productRepository->findBy([], [], 3);
 
-		// $products = $productRepository->findBy([
-		// 	'slug' => 'table-en-plastique'
-		// ], [
-		// 	'price' => 'DESC'
-		// ]);
-		//
-		// dump($products);
 
-		return $this->render('home.html.twig');
+		return $this->render('home.html.twig', [
+			'products' => $products
+		]);
 	}
 }
