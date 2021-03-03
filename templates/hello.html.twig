@@ -1,0 +1,15 @@
+{% extends "base.html.twig" %}
+
+{% block body %}
+<h1>Bonjour {{ prenom }} !</h1>
+
+{#<h2>Nos formateurs</h2>#}
+{#    {% include "_formateur.html.twig" with {"formateur": formateur1} %}#}
+{#    {% include "_formateur.html.twig" with {"formateur": formateur2} %}#}
+
+{% endblock %}
+
+{% block title %}
+    Bonjour
+{{ prenom }}
+{% endblock %}
