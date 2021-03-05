@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+{#{% form_theme formView 'bootstrap_4_layout.html.twig' %}#}
+
+{% block title %}
+	Création d'un produit
+{% endblock %}
+
+{% block body %}
+	<h1>Nouveau produit</h1>
+
+	{{ form_start(formView) }}
+
+	{{ form_errors(formView) }}
+
+	<div class="row">
+		<div class="col">
+			{{ form_row(formView.name) }}
+			{{ form_row(formView.price) }}
+		</div>
+		<div class="col">
+			{{ form_row(formView.mainPicture) }}
+			{{ form_row(formView.category) }}
+			{{ form_row(formView.shortDescription) }}
+		</div>
+	</div>
+
+	<button type="submit" class="btn btn-primary mt-3">
+		<i class="fas fa-save"></i>
+		Créer le produit
+	</button>
+
+	{{ form_end(formView) }}
+
+{% endblock %}
+
+
+{#	Localement, dans ce bloc, la variable form va représenter 'formview.name', 'formview.price' ETC
+	C'est ce bloc qu'appelle le form_theme, dans la ligne suivante :
+	{% form_theme formView _self %}
+	Le self, dans cette ligne informe symfony que le theme de formulaire se trouve dans CETTE page
+
+{% block form_row %}
+	<div class="form-group">
+		{{ form_label(form) }}
+		{{ form_widget(form, {'attr': {'class': 'form-control'}}) }}
+		{{ form_help(form) }}
+		{{ form_errors(form) }}
+	</div>
+{% endblock %}
+#}
+{#
+	Si maintenant on veut utiliser le même thème sur tout nos formulaires, on peut modifier le fichier de config de Twig 'packages/twig.yaml'
+#}
+
+
+
