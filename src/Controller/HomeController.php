@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Repository\ProductRepository;
@@ -8,18 +9,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class HomeController extends AbstractController
 {
-	/**
-	 * @Route("/", name="homepage")
-	 * @param ProductRepository $productRepository
-	 *
-	 * @return Response
-	 */
-	public function homepage(ProductRepository $productRepository)
-	{
-		$products = $productRepository->findBy([], [], 6);
+    /**
+     * @Route("/", name="homepage")
+     * @param ProductRepository $productRepository
+     *
+     * @return Response
+     */
+    public function homepage(ProductRepository $productRepository)
+    {
+        $products = $productRepository->findBy([], [], 6);
 
-		return $this->render('home.html.twig', [
-			'products' => $products
-		]);
-	}
+        return $this->render('home.html.twig', [
+            'products' => $products
+        ]);
+    }
 }

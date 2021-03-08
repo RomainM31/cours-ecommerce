@@ -7,12 +7,10 @@ use App\Form\ProductType;
 use App\Repository\CategoryRepository;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 class ProductController extends AbstractController
@@ -66,16 +64,15 @@ class ProductController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/admin/product/{id}/edit", name="product_edit")
-     * @param $id
-     * @param ProductRepository $productRepository
-     * @param Request $request
-     * @param EntityManagerInterface $em
-     * @param UrlGeneratorInterface $urlGenerator
-     * @return Response
-     */
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, UrlGeneratorInterface $urlGenerator)
+	/**
+	 * @Route("/admin/product/{id}/edit", name="product_edit")
+	 * @param $id
+	 * @param ProductRepository $productRepository
+	 * @param Request $request
+	 * @param EntityManagerInterface $em
+	 * @return Response
+	 */
+    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em)
     {
         $product = $productRepository->find($id);
 
