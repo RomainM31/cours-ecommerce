@@ -22,7 +22,6 @@ class AppFixtures extends Fixture
 		$this->slugger = $slugger;
 	}
 
-
 	/**
 	 * @param ObjectManager $manager
 	 *

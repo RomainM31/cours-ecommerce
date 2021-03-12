@@ -12,57 +12,58 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductController extends AbstractController
 {
-    /**
-     * @Route("/{slug}", name="product_category")
-     * @param $slug
-     * @param CategoryRepository $categoryRepository
-     *
-     * @return Response
-     */
-    public function category($slug, CategoryRepository $categoryRepository): Response
-    {
-        $category = $categoryRepository->findOneBy([
-            'slug' => $slug
-        ]);
+	/**
+	 * @Route("/{slug}", name="product_category")
+	 * @param $slug
+	 * @param CategoryRepository $categoryRepository
+	 *
+	 * @return Response
+	 */
+	public function category($slug, CategoryRepository $categoryRepository): Response
+	{
+		$category = $categoryRepository->findOneBy([
+			'slug' => $slug
+		]);
 
-        // Si la catégorie entrée dans l'url n'existe pas :
-        if (!$category) {
-            // throw new NotFoundHttpException("La catégorie demandée n'existe pas");
-            // L'AbstractController embarque une fonction plus simple à utiliser qui est :
-            throw $this->createNotFoundException("La catégorie demandée n'existe pas");
+		// Si la catégorie entrée dans l'url n'existe pas :
+		if (!$category) {
+			// throw new NotFoundHttpException("La catégorie demandée n'existe pas");
+			// L'AbstractController embarque une fonction plus simple à utiliser qui est :
+			throw $this->createNotFoundException("La catégorie demandée n'existe pas");
 
-        }
+		}
 
-        return $this->render('product/category.html.twig', [
-            'slug' => $slug,
-            'category' => $category
-        ]);
-    }
+		return $this->render('product/category.html.twig', [
+			'slug' => $slug,
+			'category' => $category
+		]);
+	}
 
-    /**
-     * @Route ("/{category_slug}/{slug}", name="product_show")
-     * @param $slug
-     * @param ProductRepository $productRepository
-     *
-     * @return Response
-     */
-    public function show($slug, ProductRepository $productRepository)
-    {
-        $product = $productRepository->findOneBy([
-            'slug' => $slug
-        ]);
+	/**
+	 * @Route ("/{category_slug}/{slug}", name="product_show")
+	 * @param $slug
+	 * @param ProductRepository $productRepository
+	 *
+	 * @return Response
+	 */
+	public function show($slug, ProductRepository $productRepository)
+	{
+		$product = $productRepository->findOneBy([
+			'slug' => $slug
+		]);
 
-        if (!$product) {
-            throw $this->createNotFoundException("Le produit demandé n'existe pas");
-        }
+		if (!$product) {
+			throw $this->createNotFoundException("Le produit demandé n'existe pas");
+		}
 
-        return $this->render('product/show.html.twig', [
-            'product' => $product
-        ]);
-    }
+		return $this->render('product/show.html.twig', [
+			'product' => $product
+		]);
+	}
 
 	/**
 	 * @Route("/admin/product/{id}/edit", name="product_edit")
@@ -70,65 +71,67 @@ class ProductController extends AbstractController
 	 * @param ProductRepository $productRepository
 	 * @param Request $request
 	 * @param EntityManagerInterface $em
+	 * @param ValidatorInterface $validator
 	 * @return Response
 	 */
-    public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em)
-    {
-        $product = $productRepository->find($id);
+	public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em, ValidatorInterface $validator)
+	{
+		$product = $productRepository->find($id);
 
-        $form = $this->createForm(ProductType::class, $product);
+		$form = $this->createForm(ProductType::class, $product);
 
-        $form->handleRequest($request);
+		$form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $em->flush();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$em->flush();
 
-            return $this->redirectToRoute('product_show', [
-                'category_slug' => $product->getCategory()->getSlug(),
-                'slug' => $product->getSlug()
-            ]);
-        }
+			return $this->redirectToRoute('product_show', [
+				'category_slug' => $product->getCategory()->getSlug(),
+				'slug' => $product->getSlug()
+			]);
+		}
 
-        $formView = $form->createView();
+		$formView = $form->createView();
 
-        return $this->render('product/edit.html.twig', [
-            'product' => $product,
-            'formView' => $formView
-        ]);
-    }
+		return $this->render('product/edit.html.twig', [
+			'product' => $product,
+			'formView' => $formView
+		]);
+	}
 
 
-    /**
-     * @Route("/admin/product/create", name="product_create")
-     * @param Request $request
-     * @param SluggerInterface $slugger
-     * @param EntityManagerInterface $em
-     *
-     * @return Response
-     */
-    public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
-    {
-        $product = new Product;
-        $form = $this->createForm(ProductType::class, $product);
+	/**
+	 * @Route("/admin/product/create", name="product_create")
+	 * @param Request $request
+	 * @param SluggerInterface $slugger
+	 * @param EntityManagerInterface $em
+	 *
+	 * @return Response
+	 */
+	public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
+	{
+		$product = new Product;
+		$form = $this->createForm(ProductType::class, $product);
 
-        $form->handleRequest($request);
+		$form->handleRequest($request);
 
-        if ($form->isSubmitted()) {
-            $product->setSlug(strtolower($slugger->slug($product->getName())));
+		if ($form->isSubmitted() && $form->isValid()) {
+			$product->setSlug(strtolower($slugger->slug($product->getName())));
 
-            $em->persist($product);
-            $em->flush();
+			$em->persist($product);
+			$em->flush();
 
-            return $this->redirectToRoute('product_show', [
-                'category_slug' => $product->getCategory()->getSlug(),
-                'slug' => $product->getSlug()
-            ]);
-        }
+			return $this->redirectToRoute('product_show', [
+				'category_slug' => $product->getCategory()->getSlug(),
+				'slug' => $product->getSlug()
+			]);
+		}
 
-        $formView = $form->createView();
+		$formView = $form->createView();
 
-        return $this->render('product/create.html.twig', [
-            'formView' => $formView
-        ]);
-    }
+		return $this->render('product/create.html.twig', [
+			'formView' => $formView
+		]);
+	}
 }
+
