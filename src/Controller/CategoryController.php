@@ -14,69 +14,84 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 class CategoryController extends AbstractController
 {
+	protected $categoryRepository;
 
-    /**
-     * @Route ("/admin/category/create", name="category_create")
-     * @param Request $request
-     * @param EntityManagerInterface $em
-     * @param SluggerInterface $slugger
-     * @return Response
-     */
-    public function create(Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
-    {
-        $category = new Category;
+	public function __construct(CategoryRepository $categoryRepository)
+	{
+		$this->categoryRepository = $categoryRepository;
+	}
 
-        $form = $this->createForm(CategoryType::class, $category);
+	public function renderMenuList()
+	{
+		// 1. Aller chercher les catégories dans la base de données (repository)
+		$categories = $this->categoryRepository->findAll();
 
-        $form->handleRequest($request);
+		// 2. Renvoyer le rendu html sous la forme d'une response ($this->>render)
+		return $this->render('category/_menu.html.twig', [
+			'categories' => $categories
+		]);
+	}
 
-        if ($form->isSubmitted())
-        {
-            $category->setSlug(strtolower($slugger->slug($category->getName())));
+	/**
+	 * @Route ("/admin/category/create", name="category_create")
+	 * @param Request $request
+	 * @param EntityManagerInterface $em
+	 * @param SluggerInterface $slugger
+	 * @return Response
+	 */
+	public function create(Request $request, EntityManagerInterface $em, SluggerInterface $slugger)
+	{
+		$category = new Category;
 
-            $em->persist($category);
-            $em->flush();
+		$form = $this->createForm(CategoryType::class, $category);
 
-            return $this->redirectToRoute('homepage');
-        }
+		$form->handleRequest($request);
 
-        $formView = $form->createView();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$category->setSlug(strtolower($slugger->slug($category->getName())));
 
-        return $this->render('category/create.html.twig', [
-            'formView' => $formView
-        ]);
-    }
+			$em->persist($category);
+			$em->flush();
+
+			return $this->redirectToRoute('homepage');
+		}
+
+		$formView = $form->createView();
+
+		return $this->render('category/create.html.twig', [
+			'formView' => $formView
+		]);
+	}
 
 
-    /**
-     * @Route ("/admin/category/{id}/edit", name="category_edit")
-     * @param $id
-     * @param CategoryRepository $categoryRepository
-     * @param Request $request
-     * @param EntityManagerInterface $em
-     * @return Response
-     */
-    public function edit($id, CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $em)
-    {
-        $category = $categoryRepository->find($id);
+	/**
+	 * @Route ("/admin/category/{id}/edit", name="category_edit")
+	 * @param $id
+	 * @param CategoryRepository $categoryRepository
+	 * @param Request $request
+	 * @param EntityManagerInterface $em
+	 * @return Response
+	 */
+	public function edit($id, CategoryRepository $categoryRepository, Request $request, EntityManagerInterface $em)
+	{
+		$category = $categoryRepository->find($id);
 
-        $form = $this->createForm(CategoryType::class, $category);
+		$form = $this->createForm(CategoryType::class, $category);
 
-        $form->handleRequest($request);
+		$form->handleRequest($request);
 
-        if($form->isSubmitted())
-        {
-            $em->flush();
+		if ($form->isSubmitted() && $form->isValid()) {
+			$em->flush();
 
-            return $this->redirectToRoute('homepage');
-        }
+			return $this->redirectToRoute('homepage');
+		}
 
-        $formView = $form->createView();
+		$formView = $form->createView();
 
-        return $this->render('category/edit.html.twig', [
-            'category' => $category,
-            'formView' => $formView
-        ]);
+		return $this->render('category/edit.html.twig', [
+			'category' => $category,
+			'formView' => $formView
+		]);
 
-    }
+	}
 }
