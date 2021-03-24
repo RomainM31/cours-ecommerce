@@ -11,41 +11,41 @@ use Symfony\Component\Routing\Annotation\Route;
 class TestController
 {
 
-    protected $calculator;
+	protected $calculator;
 
-    public function __construct(Calculator $calculator)
-    {
-        $this->calculator = $calculator;
-    }
+	public function __construct(Calculator $calculator)
+	{
+		$this->calculator = $calculator;
+	}
 
 
-    /**
-     * @Route("/", name="index")
-     */
-    public function index(): Response
-    {
+	/**
+	 * @Route("/", name="index")
+	 */
+	public function index(): Response
+	{
 
-        $tva = $this->calculator->calcul(100);
-        dump($tva);
-        dd("Ca fonctionne");
-    }
+		$tva = $this->calculator->calcul(100);
+		dump($tva);
+		dd("Ca fonctionne");
+	}
 
-    // En passant les paramètres $age et $prenom à ma fonction, je peux me passer des récupération des attributs de la request !
+	// En passant les paramètres $age et $prenom à ma fonction, je peux me passer des récupération des attributs de la request !
 
-    /**
-     * @Route("/test/{age<\d+>?28}/{prenom<\w+>?Romain}", name="test", methods={"GET", "POST"}, host="localhost", schemes={"http","https"})
-     * @param Request $request
-     * @param $age
-     * @param $prenom
-     * @return Response
-     */
-    public function test(Request $request, $age, $prenom): Response
-    {
-        dump($request);
+	/**
+	 * @Route("/test/{age<\d+>?28}/{prenom<\w+>?Romain}", name="test", methods={"GET", "POST"}, host="localhost", schemes={"http","https"})
+	 * @param Request $request
+	 * @param $age
+	 * @param $prenom
+	 * @return Response
+	 */
+	public function test(Request $request, $age, $prenom): Response
+	{
+		dump($request);
 //        $age = $request->attributes->get('age', 29);
 //        $prenom = $request->attributes->get('prenom', 'Le Bib');
 
-        return new Response("Vous êtes $prenom, et vous avez $age ans");
-    }
+		return new Response("Vous êtes $prenom, et vous avez $age ans");
+	}
 
 }
