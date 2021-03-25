@@ -6,7 +6,6 @@ use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +27,7 @@ class CategoryController extends AbstractController
 		// 1. Aller chercher les catégories dans la base de données (repository)
 		$categories = $this->categoryRepository->findAll();
 
-		// 2. Renvoyer le rendu html sous la forme d'une response ($this->>render)
+		// 2. Renvoyer le rendu html sous la forme d'une response ($this->render)
 		return $this->render('category/_menu.html.twig', [
 			'categories' => $categories
 		]);

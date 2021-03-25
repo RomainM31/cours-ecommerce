@@ -86,8 +86,6 @@ class AppFixtures extends Fixture
 				$manager->persist($product);
 			}
 		}
-
-
 		// Je ne mets pas le flush à l'intérieur de la boucle car cela créerait 100 requêtes SQL.
 		// Alors je persiste 100 produits et ne les flush QU'UNE SEULE fois !!
 		$manager->flush();

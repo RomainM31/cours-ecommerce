@@ -4,4 +4,5 @@ twig:
     - bootstrap_4_layout.html.twig
   globals:
     categoryRepository: "@App\\Repository\\CategoryRepository"
-# De cette façon, je rend mon categoryRepository accessible à TOUT mes templates, grâce à la création de la variable globale
+    cartService: "@App\\Cart\\CartService"
+# De cette façon, je rend mon categoryRepository ainsi que mon cartService accessible à TOUT mes templates, grâce à la création de la variable globale.
