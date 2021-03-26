@@ -20,7 +20,7 @@ class TestController
 
 
 	/**
-	 * @Route("/", name="index")
+	 * @Route("/", name="index", priority="-2")
 	 */
 	public function index(): Response
 	{

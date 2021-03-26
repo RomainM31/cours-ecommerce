@@ -22,6 +22,9 @@
             </li>
             {% if app.user %}
                 {# Ici, l'utilisateur existe et est donc connecté ! #}
+                <li class="nav-item"><a href="#" class="nav-link">
+                        Mes commandes
+                    </a></li>
                 <li class="nav-item"><a href="{{ path('security_logout') }}" class="btn btn-danger">Déconnexion</a></li>
             {% else %}
                 <li class="nav-item"><a href="#" class="nav-link">Inscription</a></li>
