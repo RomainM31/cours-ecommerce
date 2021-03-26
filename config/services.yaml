@@ -25,7 +25,7 @@ services:
     # as action arguments even if you don't extend any base controller class
     App\Controller\:
         resource: '../src/Controller/'
-        tags: ['controller.service_arguments']
+        tags: [ 'controller.service_arguments' ]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
@@ -39,7 +39,15 @@ services:
 
     Cocur\Slugify\Slugify: ~
 
+    App\Stripe\StripeService:
+        arguments:
+            $publicKey: '%env(STRIPE_PUBLIC_KEY)%'
+            $secretKey: '%env(STRIPE_SECRET_KEY)%'
+
+
+
     # Le conteneur de services s'appuie sur le fichier "services.yaml" pour apprendre à connaître des services qu'il ne connaitrait pas autrement.
     # L'avantage c'est qu'une fois qu'on lui apprend à connaître un service, on peut tout simplement se le 'faire livrer'
 
     # La commande "php bin/console debug:autowiring --all" permet d'afficher l'ensemble des services disponibles.
+
