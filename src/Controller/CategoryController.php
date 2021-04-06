@@ -92,10 +92,11 @@ class CategoryController extends AbstractController
 
 		$formView = $form->createView();
 
+
 		return $this->render('category/edit.html.twig', [
 			'category' => $category,
 			'formView' => $formView
 		]);
-
 	}
+
 }

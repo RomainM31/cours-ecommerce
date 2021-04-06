@@ -17,10 +17,6 @@ class ProductController extends AbstractController
 {
 	/**
 	 * @Route("/{slug}", name="product_category", priority="-2")
-	 * @param $slug
-	 * @param CategoryRepository $categoryRepository
-	 *
-	 * @return Response
 	 */
 	public function category($slug, CategoryRepository $categoryRepository): Response
 	{
@@ -39,17 +35,14 @@ class ProductController extends AbstractController
 		return $this->render('product/category.html.twig', [
 			'slug' => $slug,
 			'category' => $category
+
 		]);
 	}
 
-	/**
-	 * @Route ("/{category_slug}/{slug}", name="product_show", priority="-1")
-	 * @param $slug
-	 * @param ProductRepository $productRepository
-	 *
-	 * @return Response
-	 */
-	public function show($slug, ProductRepository $productRepository)
+    /**
+     * @Route ("/{category_slug}/{slug}", name="product_show", priority="-1")
+     */
+	public function show($slug, $prenom, ProductRepository $productRepository, Request $request)
 	{
 		$product = $productRepository->findOneBy([
 			'slug' => $slug
@@ -66,11 +59,6 @@ class ProductController extends AbstractController
 
 	/**
 	 * @Route("/admin/product/{id}/edit", name="product_edit")
-	 * @param $id
-	 * @param ProductRepository $productRepository
-	 * @param Request $request
-	 * @param EntityManagerInterface $em
-	 * @return Response
 	 */
 	public function edit($id, ProductRepository $productRepository, Request $request, EntityManagerInterface $em)
 	{
@@ -100,11 +88,6 @@ class ProductController extends AbstractController
 
 	/**
 	 * @Route("/admin/product/create", name="product_create")
-	 * @param Request $request
-	 * @param SluggerInterface $slugger
-	 * @param EntityManagerInterface $em
-	 *
-	 * @return Response
 	 */
 	public function create(Request $request, SluggerInterface $slugger, EntityManagerInterface $em)
 	{
