@@ -49,6 +49,5 @@ class PurchasePersister
 
 		// 8. Nous allons enregistrer la commande (EntityManagerInterface)
 		$this->em->flush();
-
 	}
 }
