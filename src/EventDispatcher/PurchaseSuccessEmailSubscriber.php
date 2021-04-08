@@ -26,6 +26,6 @@ class PurchaseSuccessEmailSubscriber implements EventSubscriberInterface
 
     public function sendSuccessEmail(PurchaseSuccessEvent $purchaseSuccessEvent)
     {
-        $this->logger->info("Email envoyé pour la commande n° " . $purchaseSuccessEvent->getPurchase()->getId());
+        $this->logger->info("Email envoyé pour la commande n°" . $purchaseSuccessEvent->getPurchase()->getId());
     }
 }

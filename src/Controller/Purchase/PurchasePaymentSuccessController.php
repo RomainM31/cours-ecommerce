@@ -49,7 +49,6 @@ class PurchasePaymentSuccessController extends AbstractController
 		$cartService->empty();
 
 		// 3.5 Lancer un événement qui permettra aux autres développeurs de réagir à la prise de commande.
-
         $purchaseEvent = new PurchaseSuccessEvent($purchase);
         $dispatcher->dispatch($purchaseEvent,'purchase.success');
 

@@ -41,3 +41,21 @@ services:
   # L'avantage c'est qu'une fois qu'on lui apprend à connaître un service, on peut tout simplement se le 'faire livrer'
 
   # La commande "php bin/console debug:autowiring --all" permet d'afficher l'ensemble des services disponibles.
+
+  App\Doctrine\Listener\ProductSlugListener:
+    tags: [
+      {
+        name: "doctrine.orm.entity_listener",
+        event: prePersist,
+        entity: App\Entity\Product,
+      },
+    ]
+
+  App\Doctrine\Listener\CategorySlugListener:
+    tags: [
+      {
+        name: "doctrine.orm.entity_listener",
+        event: prePersist,
+        entity: App\Entity\Category,
+      },
+    ]

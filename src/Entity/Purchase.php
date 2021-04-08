@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\PurchaseRepository;
+use DateTime;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,198 +11,225 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=PurchaseRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Purchase
 {
 	public const STATUS_PENDING = 'PENDING';
 	public const STATUS_PAID = 'PAID';
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+	/**
+	 * @ORM\Id
+	 * @ORM\GeneratedValue
+	 * @ORM\Column(type="integer")
+	 */
+	private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $fullName;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $fullName;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $address;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $address;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $postalCode;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $postalCode;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $city;
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $city;
 
-    /**
-     * @ORM\Column(type="integer")
-     */
-    private $total;
+	/**
+	 * @ORM\Column(type="integer")
+	 */
+	private $total;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $status = 'PENDING';
+	/**
+	 * @ORM\Column(type="string", length=255)
+	 */
+	private $status = 'PENDING';
 
-    /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="purchases")
-     */
-    private $user;
+	/**
+	 * @ORM\ManyToOne(targetEntity=User::class, inversedBy="purchases")
+	 */
+	private $user;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $purchasedAt;
+	/**
+	 * @ORM\Column(type="datetime")
+	 */
+	private $purchasedAt;
 
-    /**
-     * @ORM\OneToMany(targetEntity=PurchaseItem::class, mappedBy="purchase", orphanRemoval=true)
-     */
-    private $purchaseItems;
+	/**
+	 * @ORM\OneToMany(targetEntity=PurchaseItem::class, mappedBy="purchase", orphanRemoval=true)
+	 * @var Collection|PurchaseItem[]
+	 */
+	private $purchaseItems;
 
 
-    public function __construct()
-    {
-        $this->purchaseItems = new ArrayCollection();
-    }
+	public function __construct()
+	{
+		$this->purchaseItems = new ArrayCollection();
+	}
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+	/**
+	 * @ORM\PrePersist
+	 */
+	public function prePersist()
+	{
+		// Si aucune date de création ne m'est fournie, alors on donne la date actuelle !
+		if (empty($this->purchasedAt)) {
+			$this->purchasedAt = new DateTime();
+		}
+	}
 
-    public function getFullName(): ?string
-    {
-        return $this->fullName;
-    }
+	/**
+	 * @ORM\PreFlush
+	 */
+	public function preFlush()
+	{
+		$total = 0;
 
-    public function setFullName(string $fullName): self
-    {
-        $this->fullName = $fullName;
+		foreach ($this->purchaseItems as $item) {
+			$total += $item->getTotal();
+		}
 
-        return $this;
-    }
+		$this->total = $total;
+	}
 
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
+	public function getId(): ?int
+	{
+		return $this->id;
+	}
 
-    public function setAddress(string $address): self
-    {
-        $this->address = $address;
+	public function getFullName(): ?string
+	{
+		return $this->fullName;
+	}
 
-        return $this;
-    }
+	public function setFullName(string $fullName): self
+	{
+		$this->fullName = $fullName;
 
-    public function getPostalCode(): ?string
-    {
-        return $this->postalCode;
-    }
+		return $this;
+	}
 
-    public function setPostalCode(string $postalCode): self
-    {
-        $this->postalCode = $postalCode;
+	public function getAddress(): ?string
+	{
+		return $this->address;
+	}
 
-        return $this;
-    }
+	public function setAddress(string $address): self
+	{
+		$this->address = $address;
 
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
+		return $this;
+	}
 
-    public function setCity(string $city): self
-    {
-        $this->city = $city;
+	public function getPostalCode(): ?string
+	{
+		return $this->postalCode;
+	}
 
-        return $this;
-    }
+	public function setPostalCode(string $postalCode): self
+	{
+		$this->postalCode = $postalCode;
 
-    public function getTotal(): ?int
-    {
-        return $this->total;
-    }
+		return $this;
+	}
 
-    public function setTotal(int $total): self
-    {
-        $this->total = $total;
+	public function getCity(): ?string
+	{
+		return $this->city;
+	}
 
-        return $this;
-    }
+	public function setCity(string $city): self
+	{
+		$this->city = $city;
 
-    public function getStatus(): ?string
-    {
-        return $this->status;
-    }
+		return $this;
+	}
 
-    public function setStatus(string $status): self
-    {
-        $this->status = $status;
+	public function getTotal(): ?int
+	{
+		return $this->total;
+	}
 
-        return $this;
-    }
+	public function setTotal(int $total): self
+	{
+		$this->total = $total;
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
+		return $this;
+	}
 
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
+	public function getStatus(): ?string
+	{
+		return $this->status;
+	}
 
-        return $this;
-    }
+	public function setStatus(string $status): self
+	{
+		$this->status = $status;
 
-    public function getPurchasedAt(): ?DateTimeInterface
-    {
-        return $this->purchasedAt;
-    }
+		return $this;
+	}
 
-    public function setPurchasedAt(DateTimeInterface $purchasedAt): self
-    {
-        $this->purchasedAt = $purchasedAt;
+	public function getUser(): ?User
+	{
+		return $this->user;
+	}
 
-        return $this;
-    }
+	public function setUser(?User $user): self
+	{
+		$this->user = $user;
+
+		return $this;
+	}
+
+	public function getPurchasedAt(): ?DateTimeInterface
+	{
+		return $this->purchasedAt;
+	}
+
+	public function setPurchasedAt(DateTimeInterface $purchasedAt): self
+	{
+		$this->purchasedAt = $purchasedAt;
+
+		return $this;
+	}
 
 	/**
 	 * @return Collection
 	 */
-    public function getPurchaseItems(): Collection
-    {
-        return $this->purchaseItems;
-    }
+	public function getPurchaseItems(): Collection
+	{
+		return $this->purchaseItems;
+	}
 
-    public function addPurchaseItem(PurchaseItem $purchaseItem): self
-    {
-        if (!$this->purchaseItems->contains($purchaseItem)) {
-            $this->purchaseItems[] = $purchaseItem;
-            $purchaseItem->setPurchase($this);
-        }
+	public function addPurchaseItem(PurchaseItem $purchaseItem): self
+	{
+		if (!$this->purchaseItems->contains($purchaseItem)) {
+			$this->purchaseItems[] = $purchaseItem;
+			$purchaseItem->setPurchase($this);
+		}
 
-        return $this;
-    }
+		return $this;
+	}
 
-    public function removePurchaseItem(PurchaseItem $purchaseItem): self
-    {
-        if ($this->purchaseItems->removeElement($purchaseItem)) {
-            // set the owning side to null (unless already changed)
-            if ($purchaseItem->getPurchase() === $this) {
-                $purchaseItem->setPurchase(null);
-            }
-        }
+	public function removePurchaseItem(PurchaseItem $purchaseItem): self
+	{
+		if ($this->purchaseItems->removeElement($purchaseItem)) {
+			// set the owning side to null (unless already changed)
+			if ($purchaseItem->getPurchase() === $this) {
+				$purchaseItem->setPurchase(null);
+			}
+		}
 
-        return $this;
-    }
+		return $this;
+	}
 }
