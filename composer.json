@@ -94,6 +94,6 @@
     "require-dev": {
         "fakerphp/faker": "^1.13"
     },
-    "name": "",
+    "name": "cours-ecommerce",
     "description": ""
 }
