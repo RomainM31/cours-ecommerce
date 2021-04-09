@@ -15,7 +15,7 @@ class AmountExtension extends AbstractExtension
 	}
 
 	// Le filtre 'amount' accepte alors 3 paramètres, le symbole, le séparateur des dizaines et
-	// enfin le séparateur des milliers.
+	// le séparateur des milliers.
 	public function amount($value, string $symbol = '€', string $decsep = ',', string
 	$thousandsep = ' ')
 	{

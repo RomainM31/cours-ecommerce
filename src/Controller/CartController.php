@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Cart\CartService;
 use App\Form\CartConfirmationType;
 use App\Repository\ProductRepository;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -15,7 +16,7 @@ class CartController extends AbstractController
 {
 	/**
 	 * @var ProductRepository
-	 */
+     */
 	protected $productRepository;
 
 	/**
@@ -32,10 +33,7 @@ class CartController extends AbstractController
 
 	/**
 	 * @Route("/cart/add/{id}", name="cart_add", requirements={"id":"\d+"})
-	 * @param $id
-	 * @param Request $request
-	 * @return RedirectResponse
-	 */
+     */
 	public function add($id, Request $request)
 	{
 		// 0. Sécurisation : Est ce que le produit EXISTE ??
@@ -81,8 +79,7 @@ class CartController extends AbstractController
 
 	/**
 	 * @Route("/cart/delete/{id}", name="cart_delete", requirements={"id": "\d+"})
-	 * @param $id
-	 */
+     */
 	public function delete($id)
 	{
 		$product = $this->productRepository->find($id);
@@ -100,8 +97,6 @@ class CartController extends AbstractController
 
 	/**
 	 * @Route("/cart/decrement/{id}", name="cart_decrement", requirements={"id": "\d+"})
-	 * @param $id
-	 * @return RedirectResponse
 	 */
 	public function decrement($id)
 	{
